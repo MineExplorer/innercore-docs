@@ -44,6 +44,20 @@ declare namespace Block {
 	function createBlockWithRotation(nameID: string, defineData: BlockVariation[], blockType?: SpecialType | string): void;
 
 	/**
+	 * Creates new liquid block using specified params
+	 * @param nameID string id of the block. You should register it via
+	 * [[IDRegistry.genBlockID]] call first
+	 * @param defineData object containing all needed params to describe your custom liquid block.
+	 * There you can specify custom name IDs for static and dynamic liquid blocks separately,
+	 * and if you do this, you have to register those name IDs
+	 * via [[IDRegistry.genBlockID]] before using them
+	 * @param blockType [[SpecialType]] object, either java-object returned by
+	 * [[Block.createSpecialType]] or js-object with the required properties,
+	 * you can also pass special type name, if the type was previously registered
+	 */
+	function createLiquidBlock(nameID: string, defineData: LiquidDescriptor, blockType?: SpecialType | string): void;
+
+	/**
 	 * @param id numeric block id
 	 * @returns true, if the specified block id is a vanilla block
 	 */
@@ -310,6 +324,18 @@ declare namespace Block {
 	function registerEntityStepOnFunctionForID(id: number, func: EntityStepOnFunction): void;
 
 	/**
+	 * Defines custom behavior when the player clicks on the block with definite id
+	 * @param nameId block's numeric or string id
+	 * @param func function that will be called when the player clicks the block with given id
+	 */
+	function registerClickFunction(nameId: string | number, func: ClickFunction): void;
+
+	/**
+	 * Same as [[Block.registerClickFunction]], but only numeric block id can be passed
+	 */
+	function registerClickFunctionForID(id: number, func: ClickFunction): void;
+
+	/**
 	 * @returns whether the block of given id can contain liquid inside
 	 */
 	function canContainLiquid(id: number): boolean;
@@ -482,6 +508,78 @@ declare namespace Block {
 	}
 
 	/**
+	 * Object to specify needed params for custom liquid block
+	 */
+	interface LiquidDescriptor {
+		/**
+		 * Name of the block to be displayed 
+		 */
+		name: string,
+		/**
+		 * Delay between liquid spreading steps in ticks.
+		 * This is optional, default value is 10
+		 */		
+		tickDelay?: number,
+		/**
+		 * True if the liquid will be renewable, as water,
+		 * this parameter is false by default
+		 */
+		isRenewable?: boolean,
+		/**
+		 * Object to describe static liquid block
+		 * texture, and name id additionally
+		 */
+		still: {
+			/**
+			 * Optional, name id for static liquid block,
+			 * by default it is `nameId_still`
+			 */
+			id?: string,
+			/**
+			 * For static liquid block,
+			 * textures must be of standard block texture format
+			 */
+			texture: [string, number]
+		},
+		/**
+		 * Object to describe dynamic liquid block
+		 * texture, and name id additionally
+		 */
+		flowing: {
+			/**
+			 * Optional, name id for dynamic liquid block,
+			 * by default it is `nameId`
+			 */
+			id?: string,
+			/**
+			 * Unlike static liquid blocks,
+			 * for dynamic ones, texture must look like
+			 * `texture.liquid.png` (with no index)
+			 */
+			texture: [string, number]
+		},
+		/**
+		 * Optional section, if added, this will create fully
+		 * functional (including dispensers) bucket items
+		 */
+		bucket?: {
+			/**
+			 * Optional, name id for bucket item,
+			 * by default it is `nameId_bucket`
+			 */
+			id?: string,
+			texture: { name: string, meta?: number }
+		},
+		/**
+		 * Whether to add liquid block to creative inventory,
+		 * default is false
+		 */
+		inCreative?: boolean,
+		uiTextures?: string,
+		modelTextures?: string
+	}
+
+	/**
 	 * Function used to determine block drop
 	 * @param blockCoords coordinates where the block is destroyed and side from
 	 * where it is destroyed
@@ -570,6 +668,18 @@ declare namespace Block {
 	 */
 	interface NeighbourChangeFunction {
 		(coords: Vector, block: Tile, changedCoords: Vector, region: BlockSource): void
+	}
+
+	/**
+	 * Function used to define how the block will behave when the player clicks on it
+	 * @param coords set of all coordinate values that can be useful to write 
+	 * custom logics on click
+	 * @param item item that was in the player's hand when he touched the block
+	 * @param block block that was touched
+	 * @param player unique id of the player entity
+	 */
+	interface ClickFunction {
+		(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void;
 	}
 
 	/**
