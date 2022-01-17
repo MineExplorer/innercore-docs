@@ -390,7 +390,6 @@ declare namespace Item {
 
         setMaxUseDuration(duration: number): void;
 
-        /**@deprecated */
         setProperties(props: string): void;
 
         setStackedByData(stacked: boolean): void;
