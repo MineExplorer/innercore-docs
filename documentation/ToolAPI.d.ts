@@ -385,7 +385,7 @@ declare namespace ToolAPI {
          * @param carried an item in player's hand
          * @param fullTile block that was destroyed
          */
-        onMineBlock?: (coords: Callback.ItemUseCoordinates, carried: ItemInstance, fullTile: Tile) => void,
+        onMineBlock?: (coords: Callback.ItemUseCoordinates, carried: ItemInstance, fullTile: Tile, blockSource: BlockSource, player: number) => void,
 
 		/**
          * Any other user-defined methods and properties
