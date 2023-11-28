@@ -5,6 +5,18 @@
  * Use [[Block.convertBlockToItemId]] and [[Block.convertItemToBlockId]]
  */
 declare namespace Block {
+	const clickFunctions: {[key: string]: ClickFunction}
+
+	const dropFunctions: {[key: string]: DropFunction}
+
+	const popResourceFunctions: {[key: string]: PopResourcesFunction}
+
+	const entityInsideFunctions: {[key: string]: EntityInsideFunction}
+
+	const entityStepOnFunctions: {[key: string]: EntityStepOnFunction}
+	
+	const neighbourChangeFunctions: {[key: string]: NeighbourChangeFunction}
+
 	/**
 	 * @param id string id of the block
 	 * @returns block numeric id by its string id or just returns its numeric id 
@@ -719,13 +731,13 @@ declare namespace Block {
 	/**
 	 * @returns drop function of the block with given numeric id
 	 */
-	function getDropFunction(id: number): Block.DropFunction;
+	function getDropFunction(id: number): DropFunction;
 
 	/**
 	 * @returns place function of the block with given numeric id,
 	 * or undefined if it was not specified
 	 */
-	function getPlaceFunc(id: number): Block.PlaceFunction;
+	function getPlaceFunc(id: number): PlaceFunction;
 
 	/**
 	 * @returns given block's material numeric id
