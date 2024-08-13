@@ -516,6 +516,49 @@ declare namespace Block {
 	const neighbourChangeFunctions: {[key: string]: NeighbourChangeFunction}
 
 	/**
+	 * Internal block click event
+	 * @param coords set of all coordinate values
+	 * @param item item that was in the player's hand when he touched the block
+	 * @param block block that was touched
+	 * @param player unique id of the player entity
+	 */
+	function onBlockClicked(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void
+
+	/**
+	 * Internal block destroyed event
+	 */
+	function onBlockDestroyed(coords: Callback.ItemUseCoordinates, fullTile: Tile, byHand: boolean, isDropAllowed: boolean, blockSource: BlockSource, player: number, item: ItemInstance): void;
+
+	/**
+	 * Internal event when block is broken by environment (explosions, pistons, etc.)
+	 * @param coords coordinates where the block is destroyed
+	 * @param block information about block that is broken
+	 * @param region BlockSource object
+	 * @param f explosion radius
+	 * @param i unknown parameter, supposed to always be zero
+	 */
+	function onBlockPoppedResources(coords: Vector, block: Tile, region: BlockSource, f: number, i: number): void;
+
+	/**
+	 * Internal event of entity being insude the block
+	 */
+	function onEventEntityInside(coords: Vector, block: Tile, entity: number): void;
+
+	/**
+	 * Internal event when entity step on the block
+	 */
+	function onEventEntityStepOn(coords: Vector, block: Tile, entity: number): void;
+
+	/**
+	 * Internal event used to check block's neighbours changes
+	 * @param coords coords vector of the block
+	 * @param block Tile object of the block
+	 * @param changeCoords coords vector of the neighbour block that was changed
+	 * @param region BlockSource object
+	 */
+	function onEventNeighbourChanged(coords: Vector, block: Tile, changeCoords: Vector, region: BlockSource): void;
+
+	/**
 	 * @param id string id of the block
 	 * @returns block numeric id by its string id or just returns its numeric id 
 	 * if input was a numeric id
@@ -1154,6 +1197,7 @@ declare namespace Block {
 	 * where it is destroyed
 	 * @param block information about block that is broken
 	 * @param region BlockSource object
+	 * @param explosionRadius explosion radius
 	 * @param i unknown parameter, supposed to always be zero
 	 */
 	interface PopResourcesFunction {
